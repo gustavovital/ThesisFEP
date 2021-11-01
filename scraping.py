@@ -6,3 +6,5 @@
 # modules
 import requests
 import pandas as pd
+
+URL = "https://www.ecb.europa.eu/press/pressconf/html/index.en.html"
