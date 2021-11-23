@@ -59,8 +59,8 @@ print(dl_div)
 
 # print(dl_div[1])
 
-for tags in dl_div:
-    for date in tags.findAll('dt'):
-        print('Date: ', date['isodate'])
-    for ref in tags.findAll('dd'):
-        print('Href: ', ref.find('a')['href'])
+# for tags in dl_div:
+#     for date in tags.findAll('dt'):
+#         print('Date: ', date['isodate'])
+#     for ref in tags.findAll('dd'):
+#         print('Href: ', ref.find('a')['href'])
