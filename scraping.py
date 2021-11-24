@@ -10,7 +10,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from time import sleep
-# import pandas as pd
+import pandas as pd
 
 # URL of press conference
 URL = "https://www.ecb.europa.eu/press/pressconf/html/index.en.html"
@@ -58,9 +58,13 @@ print(dl_div)
 
 
 # print(dl_div[1])
+dates = []
+refs = []
 
-# for tags in dl_div:
-#     for date in tags.findAll('dt'):
-#         print('Date: ', date['isodate'])
-#     for ref in tags.findAll('dd'):
-#         print('Href: ', ref.find('a')['href'])
+for tags in dl_div:
+    for date in tags.findAll('dt'):
+        dates.append(date['isodate'])
+    for ref in tags.findAll('dd'):
+        refs.append(ref.find('a')['href'])
+
+pd.DataFrame({'Dates': dates, 'Href': refs}).head()
