@@ -4,10 +4,7 @@
 # The main file provides a scraping through the web page of ECB (meetings)
 
 # modules
-# import requests
-# import selenium
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 from time import sleep
 import pandas as pd
@@ -44,27 +41,17 @@ div_div = div_main.find('div', attrs={'class': 'definition-list -filter'})
 dl = div_div.find('dl', attrs={'id': 'lazyload-container'})
 dl_div = dl.findAll('div', attrs={'class': 'lazy-load loaded'})
 
-print(dl_div)
-# print(dl_div.prettify)
-# print(dl_div.findAll('dt')[0])
-# print(driver.find_element_by_tag_name('dt'))
-
-
-# for date in dl_div.findAll('dt'):
-#     print('Date: ' + date['isodate'])
-#
-# for ref in dl_div.findAll('dd'):
-#     print('href: ' + ref.find('a')['href'])
-
-
-# print(dl_div[1])
+# Preparing data frame
 dates = []
 refs = []
+title = []
 
 for tags in dl_div:
     for date in tags.findAll('dt'):
         dates.append(date['isodate'])
     for ref in tags.findAll('dd'):
+        title.append(ref.find('div', attrs={'class': 'title'}).text)
         refs.append(ref.find('a')['href'])
 
-pd.DataFrame({'Dates': dates, 'Href': refs}).head()
+href_data = pd.DataFrame({'Dates': dates, 'Href': refs, 'title': title})
+href_data.to_pickle("data\\href_data.pkl")
