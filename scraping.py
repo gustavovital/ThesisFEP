@@ -53,5 +53,6 @@ for tags in dl_div:
         title.append(ref.find('div', attrs={'class': 'title'}).text)
         refs.append(ref.find('a')['href'])
 
+# save data
 href_data = pd.DataFrame({'Dates': dates, 'Href': refs, 'title': title})
 href_data.to_pickle("data\\href_data.pkl")
