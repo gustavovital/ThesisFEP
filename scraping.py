@@ -93,7 +93,7 @@ for index, references in enumerate(href_data['Href']):
 
     href_data["Doc"][index] = doc
 
-href_data.drop([199], inplace=True)  # remove line 199 (just slides and Q&A)
+href_data.drop([199], inplace=True)  # remove line 199 (just slides and Q&A) 2003-05-08
 href_data.reset_index(drop=True, inplace=True)
 
 # save data

@@ -35,7 +35,14 @@ def calculateIndex(data):
     indiceVader = [y / (x + y) for x, y in zip(pos, neg)]  # define the index as n/(p + n)
     return pos
 
-index_polarity = calculateIndex(press_data[:133])
+index_polarity = calculateIndex(press_data)
 
-plt.plot(index_polarity, 'o-')
-plt.show()
+# plt.plot(index_polarity, 'o-')
+# plt.show()
+
+index_data = pd.DataFrame({'date': press_data['Dates'],
+                           'title': press_data['title'],
+                           'index': index_polarity})
+
+index_data.to_csv("data\\index_data.csv", index=False)
+index_data.to_pickle("data\\index_data.pkl")
