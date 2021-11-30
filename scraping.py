@@ -4,6 +4,7 @@
 # The main file provides a scraping through the web page of ECB (meetings)
 
 # modules
+import requests
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from time import sleep
@@ -55,4 +56,27 @@ for tags in dl_div:
 
 # save data
 href_data = pd.DataFrame({'Dates': dates, 'Href': refs, 'title': title})
-href_data.to_pickle("data\\href_data.pkl")
+
+# Getting the texts from href
+# create column for the docs
+href_data["Doc"] = ""
+
+# base url
+URL = "https://www.ecb.europa.eu"
+
+# iterate to get the texts and add in the data frame new col, get the <'p'>
+for index, references in enumerate(href_data['Href']):
+
+    content = requests.get(URL + references).content
+    main = BeautifulSoup(content, "html.parser").find('main')
+    section = main.find("div", attrs={"class": "section"})
+    texts = section.findAll("p")
+
+    doc = ""
+    for text in texts:
+        doc += text.text
+
+    href_data["Doc"][index] = doc
+
+# save data
+href_data.to_pickle("data\\press_data.pkl")
