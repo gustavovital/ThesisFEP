@@ -3,6 +3,10 @@
 #
 # The main file provides a scraping through the web page of ECB (meetings)
 
+####################################################################
+# IT IS NECESSARY TO UPDATE THE CODE FOR THE NEW PRESS CONFERENCES #
+####################################################################
+
 # modules
 import requests
 from selenium import webdriver
@@ -59,6 +63,8 @@ href_data = pd.DataFrame({'Dates': dates, 'Href': refs, 'title': title})
 
 # Getting the texts from href
 # create column for the docs
+
+# href_data = pd.read_pickle('data\\href_data.pkl')
 href_data["Doc"] = ""
 
 # base url
@@ -67,16 +73,28 @@ URL = "https://www.ecb.europa.eu"
 # iterate to get the texts and add in the data frame new col, get the <'p'>
 for index, references in enumerate(href_data['Href']):
 
+    doc = ""
+
     content = requests.get(URL + references).content
     main = BeautifulSoup(content, "html.parser").find('main')
-    section = main.find("div", attrs={"class": "section"})
-    texts = section.findAll("p")
 
-    doc = ""
-    for text in texts:
-        doc += text.text
+    if index >= 29 and index <= 37:
+        section = main.findAll("div", attrs={"class": "section"})
+        texts = section[1].findAll("p")
+
+        for text in texts:
+            doc += text.text
+    else:
+        section = main.find("div", attrs={"class": "section"})
+        texts = section.findAll("p")
+
+        for text in texts:
+            doc += text.text
 
     href_data["Doc"][index] = doc
+
+href_data.drop([199], inplace=True)  # remove line 199 (just slides and Q&A)
+href_data.reset_index(drop=True, inplace=True)
 
 # save data
 href_data.to_pickle("data\\press_data.pkl")
