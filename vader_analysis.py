@@ -5,7 +5,7 @@
 
 import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 # get data
 press_data = pd.read_pickle('data\\press_data.pkl')
@@ -17,22 +17,14 @@ Analyzer = SentimentIntensityAnalyzer()
 def calculateIndex(data):
 
     pos = []
-    neg = []
 
     for i in range(len(data)):
 
+        # define polarity
         criteria = Analyzer.polarity_scores(data['Doc'][i])
-
-        print('Iteration: ' + str(i))
-        # print('negativo: ' + str(criteria['neg']))
-        print('positivo: ' + str(criteria['pos']))
-        # print('Index: ' + str(criteria['neg']/(criteria['neg'] + criteria['pos'])))
-        print('Index: ' + str(criteria['neg']))
-
+        # extract the positive polarity from vader
         pos.append(criteria['pos'])
-        # neg.append(criteria['neg'])
-
-    indiceVader = [y / (x + y) for x, y in zip(pos, neg)]  # define the index as n/(p + n)
+    # return positive polarity
     return pos
 
 index_polarity = calculateIndex(press_data)
