@@ -9,6 +9,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 # get data
 press_data = pd.read_pickle('data\\press_data.pkl')
+press_data.to_csv("data\\press_data.csv", index=False)
 
 # Initiate Vader
 Analyzer = SentimentIntensityAnalyzer()
