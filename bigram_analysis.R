@@ -64,5 +64,5 @@ bigram_data %>%
             Terms == 'interest rates' |
             Terms == 'inflation expectations') &
            n > 1 & Date > as.Date('2008-01-01')) %>% 
-  ggplot(aes(x = Date, y = rollmean(n, 10, na.pad = TRUE), color = Terms)) +
+  ggplot(aes(x = Date, y = rollmean(n, 25, na.pad = TRUE), color = Terms)) +
   geom_line()

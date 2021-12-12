@@ -14,3 +14,7 @@ index_data %>%
   geom_point(aes(y = index), size = 3, alpha = .4) +
   geom_smooth(aes(y = index), size = 1.5, method = 'lm', se=TRUE) +
   theme_minimal()
+
+
+x <- (1:30)^2
+plot(x)
