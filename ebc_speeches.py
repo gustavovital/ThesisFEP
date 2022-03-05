@@ -1,5 +1,5 @@
 # Author: Gustavo Vital
-# Date: 03/03/2022
+# Date: 28/02/2022
 #
 # Get the speeches and wrangling
 
@@ -7,10 +7,17 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import requests
 
 #### Get data ####
-data = pd.read_csv('C:\\Users\\gusta\\Documents\\Mestrado\\Dissertation\\all_ECB_speeches.csv',
-                   encoding='utf-8', sep='|')
+req = requests.get('https://www.ecb.europa.eu/press/key/shared/data/all_ECB_speeches.csv')
+url = req.content
+csv = open('data\\all_ECB_speeches.csv', 'wb')
+
+csv.write(url)
+csv.close()
+
+data = pd.read_csv('data\\all_ECB_speeches.csv', encoding='utf-8', sep='|')
 # data.head()
 # type(data.date)
 
