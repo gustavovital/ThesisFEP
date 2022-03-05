@@ -3,13 +3,13 @@
 #
 # Get the speeches and wrangling
 
-#### Modules ####
+# Modules ####
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import requests
 
-#### Get data ####
+# Get data ####
 req = requests.get('https://www.ecb.europa.eu/press/key/shared/data/all_ECB_speeches.csv')
 url = req.content
 csv = open('data\\all_ECB_speeches.csv', 'wb')
@@ -21,7 +21,7 @@ data = pd.read_csv('data\\all_ECB_speeches.csv', encoding='utf-8', sep='|')
 # data.head()
 # type(data.date)
 
-#### Wrangling ####
+# Wrangling ####
 # Convert date column to date_time
 data['date'] = pd.to_datetime(data.date)
 # remove missing

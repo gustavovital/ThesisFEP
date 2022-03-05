@@ -21,5 +21,3 @@ for grams in bigrams:
 # -----------------------------------------------------------------------------
 
 tokens = nltk.word_tokenize(press_data['Doc'][0].split())
-
-punkt
