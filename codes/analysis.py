@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Data ####
-data = pd.read_csv('speeches_data.csv')
+data = pd.read_csv('data\\speeches_data.csv')
 
 # Lexicons ####
 # Loughran and Mc Donalds - https://researchdata.up.ac.za/articles/dataset/Loughran_McDonald-SA-2020_Sentiment_Word_List/14401178
@@ -9,8 +9,6 @@ loughran = pd.read_csv('data\\LM-SA-2020.csv', index_col=['word'])
 # loughran.head()
 # loughran.info()
 loughran = loughran[(loughran['sentiment'] == 'Negative') | (loughran['sentiment'] == 'Positive')]
-
-
 # loughran.info()
 
 def count_words(data):
@@ -40,6 +38,8 @@ positive = []
 negative = []
 
 for row in range(0, len(data)):
+
+    print('Progress: ' + str(round(((row + 1)/(len(data) + 1))*100, 4)) + '%')
 
     pos = 0
     neg = 0

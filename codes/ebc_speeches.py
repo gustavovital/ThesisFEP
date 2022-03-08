@@ -34,8 +34,8 @@ data['recession'] = np.where(((data.date >= '2008-01-01') & (data.date <= '2009-
          ((data.date >= '2011-07-01') & (data.date <= '2013-01-01')) |
          ((data.date >= '2019-10-01') & (data.date <= '2020-06-30')), 1, 0)
 
-plt.plot(data.date, data.recession)
-plt.show()
+# plt.plot(data.date, data.recession)
+# plt.show()
 
 data.to_pickle("data\\speeches_data.pkl")
 data.to_csv("data\\speeches_data.csv", index=False)
