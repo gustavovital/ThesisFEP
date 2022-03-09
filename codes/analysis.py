@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Data ####
 data = pd.read_csv('data\\speeches_data.csv')
@@ -37,7 +38,7 @@ def count_words(data):
 positive = []
 negative = []
 
-for row in range(0, len(data)):
+for row in range(0, (len(data)) - 2450):
 
     print('Progress: ' + str(round(((row + 1)/(len(data) + 1))*100, 4)) + '%')
 
@@ -59,3 +60,5 @@ for row in range(0, len(data)):
     count = count_words(data.iloc[row, 4])
     positive.append(pos / count)
     negative.append(neg / count)
+
+plt.plot(positive, '-')
