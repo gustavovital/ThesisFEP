@@ -66,4 +66,12 @@ for row in range(0, (len(data))):
     positive.append(pos / count)
     negative.append(neg / count)
 
-# plt.plot(negative, '-')
+plt.plot(negative, '-')
+
+
+data.insert(len(data.columns), "positive", positive, True)
+data.insert(len(data.columns), "negative", negative, True)
+
+data['index'] = data['positive']/data['negative']
+
+data.to_csv('data\\data_loughran.csv', index=False)
