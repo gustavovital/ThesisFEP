@@ -1,3 +1,8 @@
+# author: gustavo vital
+# date: 11/03/2022
+#
+# Analysis of speeches with loughran dictionary
+
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -38,7 +43,7 @@ def count_words(data):
 positive = []
 negative = []
 
-for row in range(0, (len(data)) - 2450):
+for row in range(0, (len(data))):
 
     print('Progress: ' + str(round(((row + 1)/(len(data) + 1))*100, 4)) + '%')
 
@@ -61,4 +66,4 @@ for row in range(0, (len(data)) - 2450):
     positive.append(pos / count)
     negative.append(neg / count)
 
-plt.plot(positive, '-')
+# plt.plot(negative, '-')
