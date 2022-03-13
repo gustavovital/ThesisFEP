@@ -5,6 +5,7 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 # Data ####
 data = pd.read_csv('data\\speeches_data.csv')
@@ -42,10 +43,12 @@ def count_words(data):
 
 positive = []
 negative = []
+words_total = []
 
 for row in range(0, (len(data))):
 
-    print('Progress: ' + str(round(((row + 1)/(len(data) + 1))*100, 4)) + '%')
+    words_total.append(count_words(data.contents[row]))
+    # print('Progress: ' + str(round(((row + 1)/(len(data) + 1))*100, 4)) + '%')
 
     pos = 0
     neg = 0
@@ -74,4 +77,11 @@ data.insert(len(data.columns), "negative", negative, True)
 
 data['index'] = data['positive']/data['negative']
 
+#
 data.to_csv('data\\data_loughran.csv', index=False)
+
+
+for count in range(len(data)):
+
+    words_total.append(count_words(data.contents[count]))
+
