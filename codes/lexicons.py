@@ -1,11 +1,14 @@
 # author: gustavo vital
 # date: 11/03/2022
 #
-# Analysis of speeches with loughran dictionary
+# Analysis of speeches with loughran/vader dictionary
 
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
+# import numpy as np
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+# import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Qt5Agg')
 
 # Data ####
 data = pd.read_csv('data\\speeches_data.csv')
@@ -21,25 +24,6 @@ loughran = loughran[(loughran['sentiment'] == 'Negative') | (loughran['sentiment
 def count_words(data):
     '''Count the number of words'''
     return len(data.split())
-
-
-# print(count_words(data.iloc[1,4]))
-
-# positive = 0
-# negative = 0
-
-# for word in data.iloc[0, 4].split():
-#     if word in list(loughran.index):
-#         try:
-#             if ((loughran.loc[word, 'sentiment'] == 'Negative') & (loughran.loc[word, 'sentiment'] == 'Positive')):
-#                 continue
-#             elif loughran.loc[word, 'sentiment'] == 'Negative':
-#                 negative += 1
-#             else:
-#                 positive += 1
-#         except ValueError:
-#             pass
-
 
 positive = []
 negative = []
@@ -65,23 +49,42 @@ for row in range(0, (len(data))):
             except ValueError:
                 pass
 
-    count = count_words(data.iloc[row, 4])
-    positive.append(pos / count)
-    negative.append(neg / count)
-
-plt.plot(negative, '-')
+    positive.append(pos / words_total[row])
+    negative.append(neg / words_total[row])
 
 
-data.insert(len(data.columns), "positive", positive, True)
-data.insert(len(data.columns), "negative", negative, True)
+data.insert(len(data.columns), "lm_posiive", positive, True)
+data.insert(len(data.columns), "lm_negative", negative, True)
 
-data['index'] = data['positive']/data['negative']
+# VADER ----
+Analyzer = SentimentIntensityAnalyzer()
 
-#
-data.to_csv('data\\data_loughran.csv', index=False)
+pos_vader = []
+neg_vader = []
+# compound = []
+
+for sentiment in range(len(data)):
+
+    print('Progress: ' + str(round(((sentiment + 1)/(len(data) + 1))*100, 4)) + '%')
+    criteria = Analyzer.polarity_scores(data.iloc[sentiment, 4])
+
+    pos_vader.append(criteria['pos'])
+    neg_vader.append(criteria['neg'])
+    # compound.append(criteria['compound'])
 
 
-for count in range(len(data)):
+data.insert(len(data.columns), "vader_posiive", pos_vader, True)
+data.insert(len(data.columns), "vader_negative", neg_vader, True)
+data.insert(len(data.columns), 'words_count', words_total, True)
 
-    words_total.append(count_words(data.contents[count]))
+data.to_csv('data\\data_lexicons.csv', index=False)
+
+
+
+
+
+
+
+
+
 
