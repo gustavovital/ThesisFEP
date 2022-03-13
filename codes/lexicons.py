@@ -8,25 +8,30 @@ import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 # import matplotlib.pyplot as plt
 import matplotlib
+
 matplotlib.use('Qt5Agg')
 
 # Data ####
 data = pd.read_csv('data\\speeches_data.csv')
 
 # Lexicons ####
-# Loughran and Mc Donalds - https://researchdata.up.ac.za/articles/dataset/Loughran_McDonald-SA-2020_Sentiment_Word_List/14401178
+# Loughran and Mc Donalds - https://researchdata.up.ac.za/articles/dataset/Loughran_McDonald-SA-2020_Sentiment_Word_
+# List/14401178
 loughran = pd.read_csv('data\\LM-SA-2020.csv', index_col=['word'])
 # loughran.head()
 # loughran.info()
 loughran = loughran[(loughran['sentiment'] == 'Negative') | (loughran['sentiment'] == 'Positive')]
+
+
 # loughran.info()
 
-def count_words(data):
-    '''Count the number of words'''
-    return len(data.split())
+def count_words(data_word):
+    """Count the number of words"""
+    return len(data_word.split())
 
-positive = []
-negative = []
+
+pos_loughran = []
+neg_loughran = []
 words_total = []
 
 for row in range(0, (len(data))):
@@ -49,12 +54,11 @@ for row in range(0, (len(data))):
             except ValueError:
                 pass
 
-    positive.append(pos / words_total[row])
-    negative.append(neg / words_total[row])
+    pos_loughran.append(pos / words_total[row])
+    neg_loughran.append(neg / words_total[row])
 
-
-data.insert(len(data.columns), "lm_posiive", positive, True)
-data.insert(len(data.columns), "lm_negative", negative, True)
+data.insert(len(data.columns), "lm_posiive", pos_loughran, True)
+data.insert(len(data.columns), "lm_negative", neg_loughran, True)
 
 # VADER ----
 Analyzer = SentimentIntensityAnalyzer()
@@ -64,27 +68,15 @@ neg_vader = []
 # compound = []
 
 for sentiment in range(len(data)):
-
-    print('Progress: ' + str(round(((sentiment + 1)/(len(data) + 1))*100, 4)) + '%')
+    print('Progress: ' + str(round(((sentiment + 1) / (len(data) + 1)) * 100, 4)) + '%')
     criteria = Analyzer.polarity_scores(data.iloc[sentiment, 4])
 
     pos_vader.append(criteria['pos'])
     neg_vader.append(criteria['neg'])
     # compound.append(criteria['compound'])
 
-
 data.insert(len(data.columns), "vader_posiive", pos_vader, True)
 data.insert(len(data.columns), "vader_negative", neg_vader, True)
 data.insert(len(data.columns), 'words_count', words_total, True)
 
 data.to_csv('data\\data_lexicons.csv', index=False)
-
-
-
-
-
-
-
-
-
-
