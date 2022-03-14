@@ -57,7 +57,7 @@ for row in range(0, (len(data))):
     pos_loughran.append(pos / words_total[row])
     neg_loughran.append(neg / words_total[row])
 
-data.insert(len(data.columns), "lm_posiive", pos_loughran, True)
+data.insert(len(data.columns), "lm_positive", pos_loughran, True)
 data.insert(len(data.columns), "lm_negative", neg_loughran, True)
 
 # VADER ----
@@ -78,5 +78,9 @@ for sentiment in range(len(data)):
 data.insert(len(data.columns), "vader_posiive", pos_vader, True)
 data.insert(len(data.columns), "vader_negative", neg_vader, True)
 data.insert(len(data.columns), 'words_count', words_total, True)
+
+# Wrangling data
+data_clean = data[(data['vader_negative'] > 0) & (data['vader_positive'] > 0) & (data['lm_positive'] > 0) &
+                  (data['lm_negative'] > 0)]
 
 data.to_csv('data\\data_lexicons.csv', index=False)
