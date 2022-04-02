@@ -85,3 +85,5 @@ data_clean = data[(data['vader_negative'] > 0) & (data['vader_positive'] > 0) & 
 
 data.to_csv('data\\data_lexicons.csv', index=False)
 data_clean.to_csv('data\\data_lexicons_clean.csv', index=False)
+
+data_clean = pd.read_csv('data\\data_lexicons_clean.csv')
