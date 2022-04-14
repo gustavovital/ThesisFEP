@@ -75,7 +75,7 @@ for sentiment in range(len(data)):
     neg_vader.append(criteria['neg'])
     # compound.append(criteria['compound'])
 
-data.insert(len(data.columns), "vader_posiive", pos_vader, True)
+data.insert(len(data.columns), "vader_positive", pos_vader, True)
 data.insert(len(data.columns), "vader_negative", neg_vader, True)
 data.insert(len(data.columns), 'words_count', words_total, True)
 
