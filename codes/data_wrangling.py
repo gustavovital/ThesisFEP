@@ -92,47 +92,7 @@ for i in range(0,2):
         axs[i, j].set_title(data.columns[count])
         count += 1
 
-# Unit root test
 
-from statsmodels.tsa.stattools import adfuller
-
-def adf(series):
-    for test in ['c', 'ct', 'ctt', 'nc']:
-        print('==================================================================')
-        print(f'Augmented Dickey-Fuller Test. \nConstant and trend order to include in regression: {test}\n')
-        dftest = adfuller(series, autolag='AIC', regression=test)
-        dfoutput = pd.Series(
-            dftest[0:4],
-            index=[
-                'Test Statistic',
-                'p-value',
-                'Lags Used',
-                'Number of Observations'
-            ],
-        )
-        for key, value in dftest[4].items():
-            dfoutput['Critical value (%s)' % key] = value
-        print(dfoutput)
-        print('==================================================================')
-        if dftest[0] <= dftest[4]['1%']:
-            print('Do not reject H0 at 1%')
-        elif dftest[0] <= dftest[4]['5%']:
-            print('Do not reject H0 at 5%')
-        elif dftest[0] <= dftest[4]['10%']:
-            print('Do not reject H0 at 10%')
-        else:
-            print('Reject H0')
-        print('==================================================================')
-
-# Check stationarity
-for column in data.drop(['words_count'], axis=1).columns[1:10]:
-    print('\n')
-    print('==================================================================')
-    print(f'VARIABLE TO TEST UNIT ROOT: {column}')
-    adf(data[column])
-
-
-data.to_csv('data\\data_variables.csv', index=False)
 '''Stationary variables of the dataframe data:
 
 The dataframe data is saved (above) as data_variables and it PROBABLY WILL BE CHANGED
@@ -146,3 +106,13 @@ At  1%:     gdp_diff (c, ct, ctt, nc)
 
 Non stationary variables:   cpi, une, vader_negative
 '''
+
+data['cpi_diff'] = data['cpi'].diff()
+data['une_diff'] = data['une'].diff()
+data['ppi_diff'] = data['ppi'].diff()
+data['interest_diff'] = data['interest'].diff()
+
+# Save data to csv
+data.to_csv('data\\data_variables.csv', index=False)
+
+
