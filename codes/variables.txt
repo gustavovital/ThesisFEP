@@ -1,0 +1,9 @@
+# LIST OF VARIABLES
+
+CPI         Consumer Price Index: Harmonized Prices: Total All Items for the Euro Area
+CPS         Consumer Opinion Surveys: Consumer Prices: Future Tendency of Inflation: European Commission and National Indicators for the Euro Area
+GDP         Real Gross Domestic Product (Euro/ECU series) for Euro area
+INTEREST    Long-Term Government Bond Yields: 10-year: Main (Including Benchmark) for the Euro Area
+UNE         Harmonized Unemployment Rate: Total: All Persons for the Euro Area
+
+# The variables with '_diff' are variables in difference - follow the pattern
