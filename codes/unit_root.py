@@ -54,6 +54,7 @@ At  1%:     gdp_diff (c, ct, ctt, nc)
             une_diff (c, nc)
             ppi_diff (nc)
             interest_diff (c, ct, ctt, nc)
+            cps_diff (c, ct, ctt, cn)
     5%:     ppi (c)
             cpi_diff (c, ct)
             une_diff (ct)
@@ -64,6 +65,10 @@ At  1%:     gdp_diff (c, ct, ctt, nc)
             cpi_diff (ctt)
             une_diff (ctt)
             ppi_diff (ctt)
+            cps (c)
 
 Non stationary variables:   cpi, une, vader_negative
 '''
+
+
+adf(cps.cps.diff()[28:])
