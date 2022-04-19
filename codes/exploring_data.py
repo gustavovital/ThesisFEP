@@ -12,8 +12,6 @@ data.head()
 # Correlation
 
 
-
-
 # fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
 #
 # ax1.plot(data['cpi'], data['vader_positive'], 'o')
