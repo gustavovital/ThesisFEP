@@ -21,12 +21,13 @@ lexicon = pd.read_csv('data\\data_lexicons_clean.csv')
 lexicon = lexicon.groupby(pd.PeriodIndex(lexicon['date'], freq='Q')).mean().reset_index()
 
 # APIs
-API_gdp = 'CLVMEURSCAB1GQEA19'  # quartly
-API_cpi = 'CPHPTT01EZM659N'     # monthly
-API_10y = 'IRLTLT01EZM156N'     # monthly
-API_ppi = 'OECDPIEAMP02GYM'     # monthly
-API_une = 'LRHUTTTTEZM156S'     # monthly
-API_cps = 'CSINFT02EZM460S'     # monthly
+API_gdp     = 'CLVMEURSCAB1GQEA19'  # quartly
+# API_gdpm    = 'OECDELORSGPORIXOBSAM' # monthly
+API_cpi     = 'CPHPTT01EZM659N'     # monthly
+API_10y     = 'IRLTLT01EZM156N'     # monthly
+API_ppi     = 'OECDPIEAMP02GYM'     # monthly
+API_une     = 'LRHUTTTTEZM156S'     # monthly
+API_cps     = 'CSINFT02EZM460S'     # monthly
 
 start_date = '1998-01-01'
 end_date = '2022-01-01'
@@ -49,8 +50,8 @@ cps.columns = ['date', 'cps']
 gdp_cycle, gdp_trend = sm.tsa.filters.hpfilter(gdp.gdp, 1600)  # lambda = 1600 (Q)
 gdp_diff = pd.DataFrame({'date':gdp['date'][1:], 'gdp':gdp['gdp'].diff()})  # get the diff
 
-# plt.plot(gdp.date, gdp_cycle)
-# plt.show()
+plt.plot(gdp.date, gdp_cycle)
+plt.show()
 
 # Other series
 cpi = pd.DataFrame({'date': gdp['date'], 'cpi': cpi.groupby(pd.PeriodIndex(cpi['date'], freq="Q"))['cpi'].mean().reset_index()['cpi'][:-1]})
@@ -142,8 +143,14 @@ data['ppi_diff'] = data['ppi'].diff()
 data['interest_diff'] = data['interest'].diff()
 data['cps_diff'] = data['cps'].diff()
 
+# dummies
+data['recession'] = np.where(((data.date >= '2008-01-01') & (data.date <= '2009-06-30')) |
+         ((data.date >= '2011-07-01') & (data.date <= '2013-01-01')) |
+         ((data.date >= '2019-10-01') & (data.date <= '2020-06-30')), 1, 0)
+
+data['subprime'] = np.where((data.date >= '2008-10-01') & (data.date <= '2009-07-01'), 1, 0)
+data['covid'] = np.where((data.date >= '2020-01-01') & (data.date <= '2021-04-01'), 1, 0)
+
 # Save data to csv
 data.dropna(inplace=True)
 data.to_csv('data\\data_variables.csv', index=False)
-
-
