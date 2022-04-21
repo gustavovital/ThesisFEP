@@ -44,4 +44,3 @@ irf = result.irf(10)
 
 irf.plot(orth=False, impulse='lm_positive')
 plt.show()
-
