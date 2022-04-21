@@ -1,10 +1,15 @@
+# Get economic series and merge with sentiments
+#
+# Gustavo Vital
+# 21-04-2022
+
 
 # Modules to import
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas_datareader as pdr
-
+import statsmodels.api as sm
 # Get FRED data
 def get_fred(serie, start_date, end_date):
 
@@ -41,7 +46,11 @@ une.columns = ['date', 'une']
 cps.columns = ['date', 'cps']
 
 # Wrangling
+gdp_cycle, gdp_trend = sm.tsa.filters.hpfilter(gdp.gdp, 1600)  # lambda = 1600 (Q)
 gdp_diff = pd.DataFrame({'date':gdp['date'][1:], 'gdp':gdp['gdp'].diff()})  # get the diff
+
+# plt.plot(gdp.date, gdp_cycle)
+# plt.show()
 
 # Other series
 cpi = pd.DataFrame({'date': gdp['date'], 'cpi': cpi.groupby(pd.PeriodIndex(cpi['date'], freq="Q"))['cpi'].mean().reset_index()['cpi'][:-1]})
@@ -73,7 +82,8 @@ data = pd.DataFrame({'date':gdp['date'],
                      'interest':interest['interest'],
                      'ppi':ppi['ppi'],
                      'une':une['une'],
-                     'cps':cps['cps']})
+                     'cps':cps['cps'],
+                     'gdp_gap':gdp_cycle})
 
 data = data[28:]  # From 2005
 
@@ -110,6 +120,7 @@ At  1%:     gdp_diff (c, ct, ctt, nc)
             ppi_diff (nc)
             interest_diff (c, ct, ctt, nc)
             cps_diff (c, ct, ctt, cn)
+            gdp_cycle (c, ct, ctt, cn)
     5%:     ppi (c)
             cpi_diff (c, ct)
             une_diff (ct)
