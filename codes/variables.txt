@@ -10,6 +10,8 @@ VADER_NEGATIVE  VADER Negative Sentiment
 LM_POSITIVE     Loughran-McDonald Positive Sentiment
 LM_NEGATIVE     Loughran-McDonald Negative Sentiment
 GDP_CYCLE       HP cycle gap of the gdp
+SUBPRIME        Dummy for Subprime crises
+COVID           Dummy for covid-19
 
 
 # The variables with '_diff' are variables in difference - follow the pattern
