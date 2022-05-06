@@ -4,7 +4,7 @@ library(tidyverse)
 library(patchwork)
 
 # Add correlation plot ----
-data <- read_csv('data\\data_variables.csv')
+data <- read_csv('data\\data_Q_variables.csv')
 
 cpi_cps <- data %>%
   ggplot(aes(cpi, cps)) +
@@ -55,3 +55,10 @@ cps_lm <- data %>%
   theme_minimal()
 
 (cpi_lm + cpi_vader + cpi_cps) / (cps_lm + cps_vader + vader_loughram)
+
+rm(list = lm())
+
+# consumer sentiment ----
+
+
+
