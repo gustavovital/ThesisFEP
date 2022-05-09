@@ -13,6 +13,7 @@ GDP_CYCLE       HP cycle gap of the gdp
 SUBPRIME        Dummy for Subprime crises
 COVID           Dummy for covid-19
 PPI             Producer Prices Index: Economic Activities: Total Industrial Activities for the Euro Area
+RECESSION       OECD based Recession Indicators for Euro Area from the Period following the Peak through the Trough
 
 
 # The variables with '_diff' are variables in difference - follow the pattern
