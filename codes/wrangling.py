@@ -20,7 +20,11 @@ def get_fred(serie, start, end):
 
 # data
 lexicon = pd.read_csv('data\\data_lexicons_clean.csv')
-lexicon_M = lexicon.groupby(pd.PeriodIndex(lexicon['date'], freq='M')).mean().reset_index()
+lexicon = lexicon.groupby(pd.PeriodIndex(lexicon['date'], freq='M')).mean().reset_index()
+lexicon = lexicon[lexicon['date'] <= '2020-12']
+
+lexicon['date'] = lexicon['date'].dt.strftime('%Y-%m').add('-01 00:00:00.000')
+lexicon['date'] = pd.to_datetime(lexicon.date)
 
 # API's: series are in monthly frequncy
 API_gdp = 'OECDELORSGPORIXOBSAM'  # Real Gross Domestic Product (Euro/ECU series) for Euro area
@@ -30,9 +34,11 @@ API_ppi = 'PIEATI01EZM661N'  # Producer Prices Index: Economic Activities: Total
 API_une = 'LRHUTTTTEZM156S'  # Harmonized Unemployment Rate: Total: All Persons for the Euro Area
 API_cps = 'CSINFT02EZM460S'  # Consumer Opinion Surveys: Consumer Prices: Future Tendency of Inflation: European
 # Commission and National Indicators for the Euro Area
+API_rec = 'EUROREC'  # OECD based Recession Indicators for Euro Area from the Period following the Peak through the
+# Trough
 
 
-start_date = '1998-01-01'
+start_date = '2005-01-01'
 end_date = '2020-12-01'
 
 # download series
@@ -42,6 +48,7 @@ interest = get_fred(API_10y, start_date, end_date)
 ppi = get_fred(API_ppi, start_date, end_date)
 une = get_fred(API_une, start_date, end_date)
 cps = get_fred(API_cps, start_date, end_date)
+recession = get_fred(API_rec, start_date, end_date)
 
 gdp.columns = ['date', 'gdp']
 cpi.columns = ['date', 'cpi']
@@ -49,7 +56,7 @@ interest.columns = ['date', 'interest']
 ppi.columns = ['date', 'ppi']
 une.columns = ['date', 'une']
 cps.columns = ['date', 'cps']
-
+recession.columns = ['date', 'recession']
 
 # get non observable variables
 gdp_cycle, gdp_trend = sm.tsa.filters.hpfilter(gdp.gdp, 14400)  # hodrick-prescott filter to get the gap gdp.
@@ -65,26 +72,18 @@ data = pd.DataFrame({'date': gdp['date'],
                      'une': une['une'],
                      'cps': cps['cps'],
                      'gdp_cycle': gdp_cycle,
-                     'gdp_trend': gdp_trend})
-
-# first filtering (date > 2005 because of the lexicons range)
-data = data[data.date >= '2005-01-01']
-data.reset_index(inplace=True)
-data.drop(columns=['index'], inplace=True)
+                     'gdp_trend': gdp_trend,
+                     'recession': recession['recession']})
 
 # add lexicons info to the data
-data['lm_positive'] = lexicon.lm_positive
-data['lm_negative'] = lexicon.lm_negative
-data['vader_positive'] = lexicon.vader_positive
-data['vader_negative'] = lexicon.vader_negative
-data['words_count'] = lexicon.words_count
+data = pd.merge(data, lexicon, on='date', how='outer')
 
-# creating dummies for the data
-data['covid'] = np.where((data.date >= '2020-01-01') & (data.date <= '2021-04-01'), 1, 0)
-data['recession'] = np.where(((data.date >= '2008-01-01') & (data.date <= '2009-06-30')) |
-                               ((data.date >= '2011-07-01') & (data.date <= '2013-01-01')) |
-                               ((data.date >= '2019-10-01') & (data.date <= '2020-06-30')), 1, 0)
+# dealing missing and saving data
 
-# cleaning data from missing and saving data
-data.dropna(inplace=True)
+data['vader_positive'] = data['vader_positive'].interpolate()
+data['vader_negative'] = data['vader_negative'].interpolate()
+data['lm_positive'] = data['lm_positive'].interpolate()
+data['lm_negative'] = data['lm_negative'].interpolate()
+
+# data.dropna()  # not run: remove wordcount (affects the estimations)
 data.to_csv('data\\data.csv', index=False)
