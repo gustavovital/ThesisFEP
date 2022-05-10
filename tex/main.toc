@@ -1,9 +1,0 @@
-\babel@toc {english}{}\relax 
-\contentsline {section}{Biographical note}{ii}{chapter*.2}%
-\contentsline {section}{Acknowledgements}{iii}{chapter*.3}%
-\contentsline {section}{Abstract}{iv}{chapter*.4}%
-\contentsline {section}{Resumo}{v}{chapter*.5}%
-\contentsline {chapter}{\numberline {1}\textbf {Introduction}}{1}{chapter.1}%
-\contentsline {chapter}{\numberline {2}\textbf {Name of Chapter 2}}{2}{chapter.2}%
-\contentsline {chapter}{\numberline {3}Conclusions}{3}{chapter.3}%
-\contentsline {chapter}{Appendix}{i}{chapter*.9}%

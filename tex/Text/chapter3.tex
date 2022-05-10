@@ -1,0 +1,103 @@
+\chapter{\textbf{Methodology}} \label{cap:methodology}
+
+%As stated before, as this is a quantitative and somewhat qualitative analysis, some specific techniques will have to be used.\\
+
+%First, when it comes to an analysis that takes into account the way in which the European Central Bank expresses itself. Thus, it is necessary that the work takes shape around either ECB speeches\footnote{\url{https://www.ecb.europa.eu/press/key/date/html/index.en.html}} or press conferences \footnote{\url{https://www.ecb.europa.eu/press/pr/date/html/index.en.html}}. Regarding the first, this becomes easier, given the fact that the ECB releases the speeches dataset. In relation to the second one, a more robust work is needed.
+
+%\section{Data} \label{sec:data}
+
+%Given that the format in which press conferences are found on the European central bank website is unstructured (texts are not organized in a database, for example), a more alternative approach to obtaining textual data is needed. Web scraping is the alternative that allows to obtain these data in a computational way, without having to do the gruelling work of locating link by link, copying the text, storing, and organizing it.\\
+
+%The basic principle of web scraping is to locate specific tags in HTML that make it possible to locate and obtain data, through an algorithm that instructs the computer to do this. After obtaining the tags and texts, the selected texts (or web pages) are stored in a dataset and organize the data. This technique would be used to obtain ECB press conferences. After the organization of the database, natural language processes are used for the analysis of textual documents.\\
+
+%The other basic required time series (relating to macroeconomic variables) are available on the FRED website and are real output growth, output gap, unemployment, natural unemployment, inflation (consumer price index), and consumer confidence\footnote{The variables “natural unemployment” and “output gap” for being unobservable would be obtained from the Hodrick-Prescott filter}.
+
+%\section{Tokenization} \label{sec:tokenization}
+
+%Tokenization is basically the division of a sentence, sentence, paragraph, or an entire text document into smaller units, such as individual words or even terms. Each of these smaller units is called tokens.\\
+
+%From tokenization it is possible to count specific words, specific textual expressions and analyse how variations of words and expressions can indicate specific and relevant periods in terms of conjecture or economic structure. For example, given the term “inflation target”, from tokenization it is possible to visualize the appearance of this term in ECB press conferences - it would be plausible to question whether the appearance of certain terms appear more in times of recessions or expansions of the economic cycle.\\
+
+\section{Sentiment Lexicons} \label{sec:lexicons}
+
+\subsection{Polarity-based Lexicons} \label{subsec:polbas}
+\subsection{Valence-based Lexicons}
+
+%In the scope of sentiment analysis, 
+
+%In the scope of sentiment analysis, it is necessary to use a dictionary of sentiments to detect polarities of sentiments and positive/negative scores. From the scores and polarities, it is possible to obtain a sentiment index that generates a possible correlation with the macroeconomic scenario. Basically, a sentiment dictionary works by indicating a specific punctuation for each word, taking into account punctuation and connectives. That is, depending on how a sentence or sentence is written, its polarity (score) varies.
+
+\subsection{VADER – Valence Aware Dictionary for sEntiment Reasoning} \label{subsec:vader}
+
+VADER, or Valence Aware Dictionary for sEntiment Reasoning is a lexicon initially created as a parsimonious lexicon for social media text. However, it has been used in general cases of textual sentiment analysis given it's benchmarks compared to other lexicons or even machine learning oriented techniques ``relying on Naive Bayes, Maximum Entropy, and Support Vector Machine (SVM) algorithms'' \citep[p.216]{hutto2014vader}. Differently of most part of lexicons, VADER was created taking into account a combination of qualitative and quantitative methods to empirically validates and produces a \textit{golden-standard} sentiment lexicon \cite{hutto2014vader}.\\
+
+Due to the fact that VADER is an open-source lexicon, it is relatively simple to modify -- even if it is not what was done in this work, it would be possible, if necessary, merging VADER with some other lexicons, with the objective of creating a more complex and dense lexicon focused on economic science and finance. This lexicon has about 7520 words and textual forms with a classified score compound which after normalized varies from -1 to 1 such that:
+\begin{align} \label{eq:vaadercoumpond}
+    score_ = \begin{cases}
+                positive\quad if \quad compound > 0.05\\
+                neutral\quad if \quad 0.05 \geq compound \geq -0.05\\
+                negative\quad if \quad compound < 0.05
+              \end{cases} \qquad \forall\quad compound \in (-1, 1)
+\end{align}
+
+The positive, neutral and negative scores are ratios for each category that the text or expression fells on: 
+\begin{quote}
+    ``These are the most useful metrics if you want to analyze the context \& presentation of how sentiment is conveyed or embedded in rhetoric for a given sentence. For example, different writing styles may embed strongly positive or negative sentiment within varying proportions of neutral text -- i.e., some writing styles may reflect a penchant for strongly flavored rhetoric, whereas other styles may use a great deal of neutral text while still conveying a similar overall (compound) sentiment. As another example: researchers analyzing information presentation in journalistic or editorical news might desire to establish whether the proportions of text (associated with a topic or named entity, for example) are balanced with similar amounts of positively and negatively framed text versus being "biased" towards one polarity or the other for the topic/entity'' \cite{vadergit}.
+\end{quote}
+
+Even when VADER excels when in social media, it's scores benchmarks when considered newspaper editorials are higher above the other lexicons or machine learning techniques (Table \ref{tab:vaderscore}) -- ``Surprisingly, when we further inspect the classification accuracy, we see that VADER (F1 = 0.96) actually even outperforms individual human raters (F1 = 0.84) at correctly classifying the sentiment of tweets into positive, neutral, or negative classes'' \citep[p.216]{hutto2014vader}.
+
+\begin{table}[!h]
+\centering
+\caption{VADER 3-class classification performance as compared to individual human raters and 7 established lexicon baselines}
+\begin{tabular}{l|c|c|c|c}
+\hline
+\multicolumn{2}{l|}{Correlation to ground truth} & \multicolumn{3}{l}{Classification Accuracy Metrics}   \\ \cline{3-5} 
+\multicolumn{2}{l|}{(mean of 20 humans raters)}  & Overall Precision & Overall Recall & Overall F1 score \\ \hline
+\multicolumn{5}{c}{NY Times Editorials (5,190 article snippets)}                                         \\ \hline
+Ind. Humans                & 0.745               & 0.87              & 0.55           & 0.65             \\
+VADER                      & 0.492               & 0.69              & 0.49           & 0.55             \\
+Hu-Liu04                   & 0.487               & 0.70              & 0.45           & 0.52             \\
+SCN                        & 0.252               & 0.62              & 0.47           & 0.38             \\
+GI                         & 0.362               & 0.65              & 0.44           & 0.49             \\
+SWN                        & 0.262               & 0.57              & 0.49           & 0.52             \\
+LIWC                       & 0.220               & 0.66              & 0.17           & 0.21             \\
+ANEW                       & 0.202               & 0.59              & 0.32           & 0.35             \\
+WSD                        & 0.218               & 0.55              & 0.45           & 0.47             \\ \hline 
+\end{tabular}
+\caption*{Source: \citep[p. 223]{hutto2014vader}}
+\label{tab:vaderscore}
+\end{table}
+
+
+
+%One of the most used dictionaries today for detecting sentiments is the Valence Aware Dictionary for Sentiment Reasoning (VADER). The choice of VADER as the main dictionary is due to some facts: “it is bigger, yet just as simply inspected, understood, quickly applied (without a need for extensive learning/training) and easily extended” (Hutto \& Gilbert, 2014. p.1).\\
+
+%Due to the fact that VADER is an open-source dictionary, it is relatively simple to modify the dictionary so that it has a greater focus on the economic part. The change needed is likely to be fundamentally within the word scores: that is, inserting specific words like “price” or “prices” into the dictionary scope and assigning a referent score based on other economics-based sentiment dictionaries. As well as, if necessary, merging VADER with some other dictionary with a more economical approach.\\
+
+%Once you have the scores for the texts as well as the tokens, it becomes possible to relate the variation of certain economic words/terms with the variation in the sentiment of the corpus or of each press conference. The next step is, then, to relate the obtained index (either polarity or the score itself) with macroeconomic variables.\\
+
+\subsection{Loughran-McDonald: LM-SA-2020}  \label{subsec:loughran}
+
+The other lexicon used in this work is the LM-SA-2020 and was the same provided by \cite{loughran2011liability}. Fundamentally, the difference between this one is the composition: the authors developed a dictionary with the purpose of revising the traditional lexicons in which certain words are or are not considered positive or negative in the economic and financial sphere \citep[p. 35]{loughran2011liability}:
+
+\begin{quote}
+    ``The motivation for building the LM-SA-2020 word list was based on an experiment using the above-mentioned original lists to detect sentiment-carrying words in South African financial article headlines''\citep[p. 1]{lmdata}
+\end{quote}
+
+This lexicon uses 808 financial articles and only about 37\% of the headlines actually corresponded to the expected sentiments (either in terms of words or expressions) given the articles verified by the authors\citep{loughran2011liability}. In terms of benchmark, with adding economic words and removing others in terms of polarity, sentiment detection and prediction increased by about 29\% when added to NLTK's WordNet\footnote{\url{https://www.nltk.org/howto/wordnet.html}}.\\
+
+The results obtained by the authors were based on an analysis of two samples of reference articles: first, the authors considered a sample of 10 thousand files related to firms subject to shareholder litigation under Rule 10b-5. The other sample used by the authors considers \cite{doyle2007accruals}, between August 2002 and November 2005, companies disclosed at least one material deficiency in internal control \citep[p. 41]{loughran2011liability}. The authors estimated different models\footnote{In fact, 28 different Logit models were estimated. The economic variables used were The number of shares outstanding times the price of the stock as reported by CRSP on the day before the file date; Book-to-market (Derived from the Compustat and CRSP data items as specified in Fama and French (2001). The variable is based on the most recent Compustat data no more than 1 year before the file date. After eliminating observations with negative book-to-market, we winsorize the book-to-market variable at the 1\% level); The volume of shares traded in days [−252, −6] prior to the file date divided by shares outstanding on the file date. At least 60 observations of daily volume must be available to be included in the sample; The prefile date Fama–French alpha based on a regression of their three-factor model using days [−252, −6]. At least 60 observations of daily returns must be available to be included in the sample; The percent of institutional ownership reported in the CDA/Spectrum database for the most recent quarter before the file date. The variable is considered missing for negative values and winsorized to 100\% on the positive side; The average volume of the 4-day event window [0, 3], where volume is standardized based on its mean and standard deviation from days [−65, −6]; The root-mean square error from a Fama–French three-factor model for days [6, 252], with a minimum of 60 daily observations; Standardized unexpected earnings for the quarterly earnings announced within 90 days after the 10-K file date. The actual earnings and the analyst forecast consensus (mean) are from I/B/E/S unadjusted files, which are used to avoid the rounding issue. The unexpected earnings are standardized with stock price; The standard deviation of analysts’ forecasts in the most recent period prior to the earnings announcement used to calculate SUE, scaled by the stock price at the end of the quarter; The monthly change in the mean of analysts’ forecasts, scaled by the stock price in the prior month; and a dummy variable set equal to one for firms whose shares are listed on the NASDAQ stock exchange, else zero\citep[p.63]{loughran2011liability}} to reach the final conclusion that the lexicon accuracy increases with the addition or change of economic terms.\\
+
+The lexicon created by the authors also allows for a more comprehensive classification in which, in addition to classifying certain words and terms as positive and negative, it also classifies them as ``uncertainty, litigious, strong modal, and weak modal words''\citep[p.62]{loughran2011liability}: 
+\begin{quote}
+    ``The paper finds evidence that some word lists are related to market reactions around the 10-K filing date, trading volume, unexpected earnings, and subsequent stock return volatility. [\dots] we show that financial researchers should be cautious when relying on word classification schemes derived outside the domain of business usage. Applying nonbusiness word lists to accounting and finance topics can lead to a high misclassification rate and spurious correlations''\citep[p.62]{loughran2011liability}
+\end{quote}
+
+
+
+
+
+%\section{Vector Autoregressive} \label{sec:var}
+
+
