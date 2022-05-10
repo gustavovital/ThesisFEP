@@ -180,14 +180,14 @@ data %>%
 library(vars)
 
 
-var_data = data.frame('indice' = (data$vader_negative[2:nrow(data)] +
-  data$vader_negative[2:nrow(data)])/2,
+var_data = data.frame('indice' = (data$vader_negative[2:nrow(data)]),
                       'cpi' = diff(data$cpi),
                       'gdp' = data$gdp_cycle[2:nrow(data)],
                       'interest' = diff(data$interest),
                       'une' = diff(data$une),
+                      'ppi' = diff(data$ppi),
                       'date' = data$date[2:nrow(data)]) %>%
-  filter(date > as.Date('2010-01-01')) %>%
+  filter(date > as.Date('2013-04-01')) %>%
   dplyr::select(-date) %>%
   drop_na()  # best model until now
 
@@ -198,14 +198,14 @@ VARselect(var_data, lag.max = 5, type = "const",
           exogen = cbind('recession' = data$recession_x[(1 + nrow(data)-nrow(var_data)):nrow(data)]))
 
 
-var_model <- VAR(var_data, p=2, type='const',
+var_model <- VAR(var_data, p=1, type='const',
                  exogen = cbind('recession' = data$recession_x[(1 + nrow(data)-nrow(var_data)):nrow(data)]))
 #summary(var_model)
 
 
 plot(irf(var_model,
            impulse = 'indice',
-           response = 'interest',
+           response = 'ppi',
            n.ahead = 12,
            boot = T,
            ci = 0.90)
