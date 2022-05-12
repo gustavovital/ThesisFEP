@@ -28,12 +28,6 @@ data['date'] = pd.to_datetime(data.date)
 data.dropna(inplace=True)
 # Filter for date < '2021-12-31' (until 2021)
 data = data[data['date'] <= '2021-12-31']
-
-# Filter for recession periods
-data['recession'] = np.where(((data.date >= '2008-01-01') & (data.date <= '2009-06-30')) |
-         ((data.date >= '2011-07-01') & (data.date <= '2013-01-01')) |
-         ((data.date >= '2019-10-01') & (data.date <= '2020-06-30')), 1, 0)
-
 data = data[data['date'] >= '2005-01-01']
 
 # plt.plot(data.date, data.recession)
