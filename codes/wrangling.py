@@ -22,6 +22,7 @@ def get_fred(serie, start, end):
 lexicon = pd.read_csv('data\\data_lexicons_clean.csv')
 lexicon = lexicon.groupby(pd.PeriodIndex(lexicon['date'], freq='M')).mean().reset_index()
 lexicon = lexicon[lexicon['date'] <= '2020-12']
+lexicon.drop('words_count', axis=1, inplace=True)
 
 lexicon['date'] = lexicon['date'].dt.strftime('%Y-%m').add('-01 00:00:00.000')
 lexicon['date'] = pd.to_datetime(lexicon.date)
@@ -48,7 +49,7 @@ interest = get_fred(API_10y, start_date, end_date)
 ppi = get_fred(API_ppi, start_date, end_date)
 une = get_fred(API_une, start_date, end_date)
 cps = get_fred(API_cps, start_date, end_date)
-recession = get_fred(API_rec, start_date, end_date)
+# recession = get_fred(API_rec, start_date, end_date)
 
 gdp.columns = ['date', 'gdp']
 cpi.columns = ['date', 'cpi']
@@ -56,7 +57,7 @@ interest.columns = ['date', 'interest']
 ppi.columns = ['date', 'ppi']
 une.columns = ['date', 'une']
 cps.columns = ['date', 'cps']
-recession.columns = ['date', 'recession']
+# recession.columns = ['date', 'recession']
 
 # get non observable variables
 gdp_cycle, gdp_trend = sm.tsa.filters.hpfilter(gdp.gdp, 14400)  # hodrick-prescott filter to get the gap gdp.
@@ -72,18 +73,33 @@ data = pd.DataFrame({'date': gdp['date'],
                      'une': une['une'],
                      'cps': cps['cps'],
                      'gdp_cycle': gdp_cycle,
-                     'gdp_trend': gdp_trend,
-                     'recession': recession['recession']})
+                     'gdp_trend': gdp_trend})
 
 # add lexicons info to the data
 data = pd.merge(data, lexicon, on='date', how='outer')
 
 # dealing missing and saving data
-
 data['vader_positive'] = data['vader_positive'].interpolate()
 data['vader_negative'] = data['vader_negative'].interpolate()
 data['lm_positive'] = data['lm_positive'].interpolate()
 data['lm_negative'] = data['lm_negative'].interpolate()
 
-# data.dropna()  # not run: remove wordcount (affects the estimations)
+# creating data with diff values
+
+data['gdp_diff'] = data['gdp'].diff()
+data['cpi_diff'] = data['cpi'].diff()
+data['une_diff'] = data['une'].diff()
+data['ppi_diff'] = data['ppi'].diff()
+data['interest_diff'] = data['interest'].diff()
+
+# dummy for recession
+data['subprime'] = np.where((data.date >= '2008-03-01') & (data.date <= '2009-05-01'), 1, 0)
+data['debt_crises'] = np.where((data.date >= '2011-09-01') & (data.date <= '2013-01-01'), 1, 0)
+data['covid'] = np.where((data.date >= '2020-03-01') & (data.date <= '2020-05-01'), 1, 0)
+
+data_model = data[data.date >= '2010-01-01']
+data_model.drop('subprime', axis=1, inplace=True)
+
+# save data
+data_model.to_csv('data\\data_model.csv', index=False)
 data.to_csv('data\\data.csv', index=False)
