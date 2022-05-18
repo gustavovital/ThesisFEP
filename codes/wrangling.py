@@ -97,6 +97,9 @@ data['subprime'] = np.where((data.date >= '2008-03-01') & (data.date <= '2009-05
 data['debt_crises'] = np.where((data.date >= '2011-09-01') & (data.date <= '2013-01-01'), 1, 0)
 data['covid'] = np.where((data.date >= '2020-03-01') & (data.date <= '2020-05-01'), 1, 0)
 
+# cumulaive index
+np.mean(data['lm_negative'])
+
 data_model = data[data.date >= '2010-01-01']
 data_model.drop('subprime', axis=1, inplace=True)
 
