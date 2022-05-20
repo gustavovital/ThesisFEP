@@ -44,7 +44,7 @@ data.model <- data.frame('cps' = data$cps,
                          'ppi_12' = lag(data$ppi, 12)) %>%
   drop_na() # remove NA
 
-sink(file = "data\\lasso_output.txt")
+sink(file = "data\\elastic_net_output.txt")
 
 cat('******************************************************************************************\n')
 cat('INDEX CONTROL: VADER \n')
@@ -124,10 +124,10 @@ for(i in 1:6){
   cat("=============================================\n")
   cat("Model Accuracy\n")
   cat("=============================================\n")
-  results <- data.frame('MAE' = mae(predict.lasso, data.test[, i]),
-                        'MSE' = mse(predict.lasso, data.test[, i]),
-                        'RMSE' = rmse(predict.lasso, data.test[, i]),
-                        'R2' = R2(predict.lasso, data.test[, i])[1])
+  results <- data.frame('MAE' = mae(predict.elastic.net, data.test[, i]),
+                        'MSE' = mse(predict.elastic.net, data.test[, i]),
+                        'RMSE' = rmse(predict.elastic.net, data.test[, i]),
+                        'R2' = R2(predict.elastic.net, data.test[, i])[1])
   
   rownames(results) <- ''
   print(results)
@@ -213,10 +213,10 @@ for(i in 1:6){
   cat("=============================================\n")
   cat("Model Accuracy\n")
   cat("=============================================\n")
-  results <- data.frame('MAE' = mae(predict.lasso, data.test[, i]),
-                        'MSE' = mse(predict.lasso, data.test[, i]),
-                        'RMSE' = rmse(predict.lasso, data.test[, i]),
-                        'R2' = R2(predict.lasso, data.test[, i])[1])
+  results <- data.frame('MAE' = mae(predict.elastic.net, data.test[, i]),
+                        'MSE' = mse(predict.elastic.net, data.test[, i]),
+                        'RMSE' = rmse(predict.elastic.net, data.test[, i]),
+                        'R2' = R2(predict.elastic.net, data.test[, i])[1])
   
   rownames(results) <- ''
   print(results)
