@@ -17,6 +17,7 @@ data <- read_csv('data\\data_model.csv')
 
 normal_index_n <- (data$lm_negative - mean(data$lm_negative))/(sd(data$lm_negative))
 normal_index_p <- (data$lm_positive - mean(data$lm_positive))/(sd(data$lm_positive))
+ 
 
 
 
@@ -39,7 +40,9 @@ normalize <- function(x){
 
 teste <- data.frame('date'=data$date, 
                     'cps' = (data$cps),
-                    'index'=(acum(normal_index_n)))
+                    'index'=(acum(normal_index_n)),
+                    'covid' =data$covid,
+                    'cpi' = data$cpi)
 
 teste <- data.frame(teste, 
                     'cps_1' = lag(teste$cps, 1),
@@ -103,7 +106,8 @@ for(num in 1:7){
                 if(model[["coefficients"]][2,4] < 0.1 & 
                    model[["coefficients"]][3,4] < 0.1){
                   
-                  print(model[["call"]][["formula"]])
+                  print(model)
+                  print(paste('Model: i', i,'m', m, 'j', n, 'j', j, 'k', k, 'l', l))
                   
                 }
                 
@@ -112,7 +116,8 @@ for(num in 1:7){
                    model[["coefficients"]][3,4] < 0.1 &
                    model[["coefficients"]][4,4] < 0.1){
                   
-                  print(model[["call"]][["formula"]])
+                  print(model)
+                  print(paste('Model: i', i,'m', m, 'j', n, 'j', j, 'k', k, 'l', l))
                 }
                 
               } else if(dim(model[["coefficients"]])[1] == 5){
@@ -121,7 +126,8 @@ for(num in 1:7){
                    model[["coefficients"]][4,4] < 0.1 &
                    model[["coefficients"]][5,4] < 0.1){
                   
-                  print(model[["call"]][["formula"]])
+                  print(model)
+                  print(paste('Model: i', i,'m', m, 'j', n, 'j', j, 'k', k, 'l', l))
                 }
                 
               } else if(dim(model[["coefficients"]])[1] == 6){
@@ -131,7 +137,8 @@ for(num in 1:7){
                    model[["coefficients"]][5,4] < 0.1 &
                    model[["coefficients"]][6,4] < 0.1){
                   
-                  print(model[["call"]][["formula"]])
+                  print(model)
+                  print(paste('Model: i', i,'m', m, 'j', n, 'j', j, 'k', k, 'l', l))
                 }
               }
             }
@@ -143,55 +150,29 @@ for(num in 1:7){
 }
 
 
-
-
-
-
-
-
-
-
-else if
-
-for(num in 1:7){
-  for(i in 1:3){
-    for(j in 1:3){
-      for(k in 1:3){
-        for(l in 1:3){
-          for(m in 1:3){
-            for(n in 1:3){
-              
-              if(num == 2){
-                model <- summary(lm(cps ~ lag(index, i) + lag(cps, j), data = teste))
-              } ifelse(num == 3){
-                model <- summary(lm(cps ~ lag(index, i) + lag(cps, j) + lag(cps, k), data = teste))
-              } ifelse(num == 4){
-                model <- summary(lm(cps ~ lag(index, i) + lag(cps, j) + lag(cps, k) + lag(cps, l), data = teste))
-              } ifelse(num == 5){
-                model <- summary(lm(cps ~ lag(index, i) + lag(index, m) + lag(cps, j), data = teste))
-              } ifelse(num == 6){
-                model <- summary(lm(cps ~ lag(index, i) + lag(index, m) + lag(index, n) + lag(cps, j), data = teste))
-              } ifelse(num == 7){
-                model <- summary(lm(cps ~ lag(index, i) + lag(index, m) + lag(cps, j) + lag(cps, k), data = teste))
-              } else {
-                model <- summary(lm(cps ~ lag(index, i) + lag(index, m) + lag(index, n) +
-                                      lag(cps, j) + lag(cps, k) + lag(cps, l), data = teste))
-              }
-
-            }
-          }
-        }
-      }
-    }
+for(i in 1:12){
+  for(j in 1:12){
+    
   }
 }
 
 
 
 
-
-
-
+for(i in 1:5){
+    for(k in 1:6){
+      
+      model <- summary(lm(cps ~ lag(index, i) + lag(index, (i + 1)) + lag(cps, k) + lag(cpi, k) + covid, teste))
+      
+      if(model[["coefficients"]][2,4] < 0.1 & 
+         model[["coefficients"]][3,4] < 0.1 &
+         model[["coefficients"]][4,4] < 0.1){
+        
+        print(model)
+        print(paste0('Model: CPS = Index_', i, ' + Index_', (i+1), ' + CPS_', k, ' + CPI_',k, ' + COVID + e'))
+      }
+    }
+  }
 
 
 
