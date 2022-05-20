@@ -5,6 +5,9 @@
 # Packages
 # install.packages(c('tidyverse', 'patchwork'))
 
+# set wd ----
+setwd('C:/Users/gusta/Documents/mestrado/dissertation/thesis_code/')
+
 library(tidyverse)
 library(patchwork)
 library(zoo)
