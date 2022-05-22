@@ -4,54 +4,98 @@
 # 
 # Gustavo Vital
 
-# Packages
+# Packages ----
 library(tidyverse)
 library(vars)
 
 # set wd ----
 setwd('C:/Users/gusta/Documents/mestrado/dissertation/thesis_code/')
 
-# read dataset
+# read dataset ----
 data <- read_csv('data\\data_model.csv')
 
+# divide dataset ----
 data.var.lm <- data %>% 
-  # filter(date > as.Date('2013-04-01')) %>%
   dplyr::select(-date) %>% 
   dplyr::select(lm_negative, cpi_diff, gdp_cycle, interest_diff, ppi_diff, une_diff)
 
+data.var.vader <- data %>% 
+  dplyr::select(-date) %>% 
+  dplyr::select(vader_negative, cpi_diff, gdp_cycle, interest_diff, ppi_diff, une_diff)
 
-VARselect(data.var.lm, lag.max = 5, type = "const",
-          exogen = data.frame('covid' = data$covid,
-                              'debt_crises' = data$debt_crises))
-
-
+# estimate VAR model ----
 var.model.lm <- VAR(data.var.lm, p=2, type='const')
+var.model.vader <- VAR(data.var.lm, p=2, type='const')
 
-set.seed(214)
-irf <- irf(var.model.lm,
-         impulse = 'lm_negative',
-         response = 'interest_diff',
-         n.ahead = 18,
-         boot = T,
-         ci = .68)
+# lm index ----
+cat('******************************************************************************************\n')
+cat('LM-SA \n')
+cat('******************************************************************************************\n')
 
+data.model <- matrix(nrow = 16) %>% as.tibble()
 
-matrix <- matrix(NA, nrow = 18, ncol = 15)
-colnames(matrix) <- c('cpi', 'cpi_lower', 'cpi_upper',
-                      'gdp', 'gdp_lower', 'gdp_upper',
-                      'int', 'int_lower', 'int_upper',
-                      'ppi', 'ppi_lower', 'ppi_upper',
-                      'une', 'une_lower', 'une_upper')
-
-
-for(i in 1:6){
-  variables <- colnames(matrix)[c(2, 5, 8, 11, 14)]
-  
-  matrix[, i]
-  
-  
+for(j in c('90', '68')){
+  for(i in 1:5){
+    
+    variables <- c('cpi_diff', 'gdp_cycle', 'interest_diff', 'ppi_diff', 'une_diff')
+    var <- variables[i]
+    
+    matrix.model <- matrix(NA, ncol = 3, nrow = 16) %>% as.tibble()
+    colnames(matrix.model) <- c(paste0(var, j), paste0(var, '_lower', j), paste0(var, '_upper', j))
+    
+    set.seed(214)
+    irf <- irf(var.model.lm,
+               impulse = 'lm_negative',
+               response = var,
+               n.ahead = 15,
+               boot = T,
+               ci = as.numeric(paste0('0.', j)))
+    
+    matrix.model[, 1] <- unlist(irf[["irf"]])
+    matrix.model[, 2] <- unlist(irf[["Lower"]])
+    matrix.model[, 3] <- unlist(irf[["Upper"]])
+    
+    data.model <- cbind(data.model, matrix.model)[colSums(!is.na(cbind(data.model, matrix.model))) > 0]
+    
+    
+  }
 }
 
+write.csv(data.model, 'data\\var_lm_irf.csv')
 
+# lm vader ----
+cat('******************************************************************************************\n')
+cat('LM-SA \n')
+cat('******************************************************************************************\n')
 
+data.model <- matrix(nrow = 16) %>% as.tibble()
+
+for(j in c('90', '68')){
+  for(i in 1:5){
+    
+    variables <- c('cpi_diff', 'gdp_cycle', 'interest_diff', 'ppi_diff', 'une_diff')
+    var <- variables[i]
+    
+    matrix.model <- matrix(NA, ncol = 3, nrow = 16) %>% as.tibble()
+    colnames(matrix.model) <- c(paste0(var, j), paste0(var, '_lower', j), paste0(var, '_upper', j))
+    
+    set.seed(214)
+    irf <- irf(var.model.lm,
+               impulse = 'lm_negative',
+               response = var,
+               n.ahead = 15,
+               boot = T,
+               ci = as.numeric(paste0('0.', j)))
+    
+    matrix.model[, 1] <- unlist(irf[["irf"]])
+    matrix.model[, 2] <- unlist(irf[["Lower"]])
+    matrix.model[, 3] <- unlist(irf[["Upper"]])
+    
+    data.model <- cbind(data.model, matrix.model)[colSums(!is.na(cbind(data.model, matrix.model))) > 0]
+    
+    
+  }
+}
+
+write.csv(data.model, 'data\\var_vader_irf.csv')
 
