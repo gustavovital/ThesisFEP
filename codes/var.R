@@ -25,7 +25,7 @@ data.var.vader <- data %>%
 
 # estimate VAR model ----
 var.model.lm <- VAR(data.var.lm, p=2, type='const')
-var.model.vader <- VAR(data.var.lm, p=2, type='const')
+var.model.vader <- VAR(data.var.vader, p=2, type='const')
 
 # lm index ----
 cat('******************************************************************************************\n')
@@ -65,7 +65,7 @@ write.csv(data.model, 'data\\var_lm_irf.csv')
 
 # lm vader ----
 cat('******************************************************************************************\n')
-cat('LM-SA \n')
+cat('VADER \n')
 cat('******************************************************************************************\n')
 
 data.model <- matrix(nrow = 16) %>% as.tibble()
@@ -80,8 +80,8 @@ for(j in c('90', '68')){
     colnames(matrix.model) <- c(paste0(var, j), paste0(var, '_lower', j), paste0(var, '_upper', j))
     
     set.seed(214)
-    irf <- irf(var.model.lm,
-               impulse = 'lm_negative',
+    irf <- irf(var.model.vader,
+               impulse = 'vader_negative',
                response = var,
                n.ahead = 15,
                boot = T,
@@ -98,4 +98,4 @@ for(j in c('90', '68')){
 }
 
 write.csv(data.model, 'data\\var_vader_irf.csv')
-
+rm(list = ls())
